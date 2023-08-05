@@ -163,7 +163,7 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID& guid, MessagePac
 		{
 			std::string command = packet->m_str.C_String();
 
-			if (command.substr(2) == "test")
+			if (command.substr(1) == "test")
 			{
 				displayGameMessage("Test command invoked!");
 			}

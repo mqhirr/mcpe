@@ -24,16 +24,19 @@ void ChatScreen::buttonClicked(Button* pButton)
 			{
 				if (m_textInput.m_text[0] == '/')
 				{
-					if (m_textInput.m_text.substr(2) == "test")
+					if (m_textInput.m_text.substr(1) == "test")
 					{
 						m_pMinecraft->m_pRakNetInstance->send(new MessagePacket("Test command invoked!"));
+						m_pMinecraft->m_gui.addMessage("Test command invoked!");
 					}
-					
-					return; // Can't send messages to server in peace :'(
 				}
 
-				m_pMinecraft->m_pRakNetInstance->send(new MessagePacket(m_pMinecraft->m_pLocalPlayer->m_name + ": " + m_textInput.m_text));
-				m_pMinecraft->m_gui.addMessage(m_pMinecraft->m_pLocalPlayer->m_name + ": " + m_textInput.m_text);
+				else
+				{
+					m_pMinecraft->m_pRakNetInstance->send(new MessagePacket(m_pMinecraft->m_pLocalPlayer->m_name + ": " + m_textInput.m_text));
+					m_pMinecraft->m_gui.addMessage(m_pMinecraft->m_pLocalPlayer->m_name + ": " + m_textInput.m_text);
+				}
+
 			}
 			else
 			{
