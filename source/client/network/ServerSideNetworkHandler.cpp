@@ -152,6 +152,22 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID& guid, PlaceBlock
 	redistributePacket(packet, guid);
 }
 
+void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID& guid, MessagePacket* packet)
+{
+	for (Player* pPlayer : m_pLevel->m_players)
+	{
+		if (pPlayer->m_guid != guid)
+			continue;
+
+		if (packet->m_str.C_String()[0] == '/')
+		{
+			return; // TODO: Add command handler
+		}
+
+		displayGameMessage(pPlayer->m_name + ": " + packet->m_str.C_String());
+	}
+}
+
 void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID& guid, RemoveBlockPacket* packet)
 {
 	puts_ignorable("RemoveBlockPacket");

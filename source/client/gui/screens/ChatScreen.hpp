@@ -6,6 +6,7 @@
 	SPDX-License-Identifier: BSD-1-Clause
  ********************************************************************/
 
+
 #pragma once
 
 #include "../Screen.hpp"
@@ -13,8 +14,15 @@
 class ChatScreen : public Screen
 {
 public:
+	ChatScreen();
+
 	void buttonClicked(Button*) override;
 	void init() override;
+	void tick() override;
 	void render(int mouseX, int mouseY, float f) override;
+private:
+	std::vector<GuiMessage> m_chatLog;
+	TextInputBox m_textInput;
+	Button m_btnSend;
 };
 

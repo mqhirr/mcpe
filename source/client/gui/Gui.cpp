@@ -7,6 +7,7 @@
  ********************************************************************/
 
 #include "Minecraft.hpp"
+#include "client/gui/screens/ChatScreen.hpp"
 #include "client/gui/screens/IngameBlockSelectionScreen.hpp"
 #include "client/renderer/entity/ItemRenderer.hpp"
 
@@ -400,6 +401,12 @@ void Gui::handleKeyPressed(int keyCode)
 			if (*slot <= MAX_ITEMS)
 				(*slot)++;
 
+			break;
+		}
+
+		case AKEYCODE_T:
+		{
+			m_pMinecraft->setScreen(new ChatScreen);
 			break;
 		}
 
