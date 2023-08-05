@@ -161,7 +161,14 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID& guid, MessagePac
 
 		if (packet->m_str.C_String()[0] == '/')
 		{
-			return; // TODO: Add command handler
+			std::string command = packet->m_str.C_String();
+
+			if (command.substr(2) == "test")
+			{
+				displayGameMessage("Test command invoked!");
+			}
+
+			break; // TODO: Add command handler
 		}
 
 		displayGameMessage(pPlayer->m_name + ": " + packet->m_str.C_String());

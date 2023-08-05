@@ -10,7 +10,7 @@
 
 ChatScreen::ChatScreen() :
 	m_btnSend(1, 0, 0, 0, 0, "Send"),
-	m_textInput(2, 0, 0, 0, 0, "", "G'day!")
+	m_textInput(2, 0, 0, 0, 0, "G'day!", "")
 {
 }
 
@@ -22,6 +22,16 @@ void ChatScreen::buttonClicked(Button* pButton)
 		{
 			if (m_pMinecraft->m_pRakNetInstance->m_bIsHost)
 			{
+				if (m_textInput.m_text[0] == '/')
+				{
+					if (m_textInput.m_text.substr(2) == "test")
+					{
+						m_pMinecraft->m_pRakNetInstance->send(new MessagePacket("Test command invoked!"));
+					}
+					
+					return; // Can't send messages to server in peace :'(
+				}
+
 				m_pMinecraft->m_pRakNetInstance->send(new MessagePacket(m_pMinecraft->m_pLocalPlayer->m_name + ": " + m_textInput.m_text));
 				m_pMinecraft->m_gui.addMessage(m_pMinecraft->m_pLocalPlayer->m_name + ": " + m_textInput.m_text);
 			}
@@ -45,15 +55,15 @@ void ChatScreen::tick()
 void ChatScreen::init()
 {
 	m_textInput.m_width  = m_width - 30;
-	m_textInput.m_height = 20;
+	m_textInput.m_height = 25;
 	m_textInput.m_xPos   = 0;
-	m_textInput.m_yPos   = m_height - 20;
+	m_textInput.m_yPos   = m_height - 25;
 
 	m_btnSend.m_xPos     = m_textInput.m_width;
 
-	m_btnSend.m_yPos     = m_height - 20;
+	m_btnSend.m_yPos     = m_height - 25;
 	m_btnSend.m_width    = 30;
-	m_btnSend.m_height   = 20;
+	m_btnSend.m_height   = 25;
 
 	m_textInputs.push_back(&m_textInput);
 	
