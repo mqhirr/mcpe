@@ -20,6 +20,7 @@ struct GuiMessage
 	std::string msg;
 	int field_18;
 
+	GuiMessage() : msg(""), field_18(0) {}
 	GuiMessage(const std::string& x, int a) : msg(x), field_18(a) {}
 };
 
