@@ -10,20 +10,24 @@
 
 ChatScreen::ChatScreen() :
 	m_btnSend(1, 0, 0, 0, 0, "Send"),
-	m_textInput(2, 0, 0, 0, 0, "G'day!", "")
+	m_textChat(2, 0, 0, 0, 0, "G'day!", "")
+{
+}
+
+ChatScreen::ChatScreen() : m_textChat(1, 0, 0), m_btnSend(2, 0, 0, "Send")
 {
 }
 
 void ChatScreen::buttonClicked(Button* pButton)
 {
-	if (pButton->field_30 == m_btnSend.field_30)
+	if (pButton->m_buttonId == m_btnSend.m_buttonId)
 	{
-		if (m_textInput.m_text.size() > 0)
+		if (m_textChat.m_text.size() > 0)
 		{
 			#ifdef __EMSCRIPTEN__
-			if (m_textInput.m_text[0] == '/')
+			if (m_textChat.m_text[0] == '/')
 			{
-				if (m_textInput.m_text.substr(1) == "test")
+				if (m_textChat.m_text.substr(1) == "test")
 				{
 					m_pMinecraft->m_gui.addMessage("Test command invoked!");
 				}
@@ -36,9 +40,9 @@ void ChatScreen::buttonClicked(Button* pButton)
 			#else
 			if (m_pMinecraft->m_pRakNetInstance->m_bIsHost)
 			{
-				if (m_textInput.m_text[0] == '/')
+				if (m_textChat.m_text[0] == '/')
 				{
-					if (m_textInput.m_text.substr(1) == "test")
+					if (m_textChat.m_text.substr(1) == "test")
 					{
 						m_pMinecraft->m_pRakNetInstance->send(new MessagePacket("Test command invoked!"));
 						m_pMinecraft->m_gui.addMessage("Test command invoked!");
@@ -47,18 +51,18 @@ void ChatScreen::buttonClicked(Button* pButton)
 
 				else
 				{
-					m_pMinecraft->m_pRakNetInstance->send(new MessagePacket(m_pMinecraft->m_pLocalPlayer->m_name + ": " + m_textInput.m_text));
-					m_pMinecraft->m_gui.addMessage(m_pMinecraft->m_pLocalPlayer->m_name + ": " + m_textInput.m_text);
+					m_pMinecraft->m_pRakNetInstance->send(new MessagePacket(m_pMinecraft->m_pLocalPlayer->m_name + ": " + m_textChat.m_text));
+					m_pMinecraft->m_gui.addMessage(m_pMinecraft->m_pLocalPlayer->m_name + ": " + m_textChat.m_text);
 				}
 
 			}
 			else
 			{
-				m_pMinecraft->m_pRakNetInstance->send(new MessagePacket(m_textInput.m_text));
+				m_pMinecraft->m_pRakNetInstance->send(new MessagePacket(m_textChat.m_text));
 			}
 			#endif
 
-			m_textInput.m_text.clear();
+			m_textChat.m_text.clear();
 		}
 	}
 }
@@ -72,23 +76,28 @@ void ChatScreen::tick()
 
 void ChatScreen::init()
 {
-	m_textInput.m_width  = m_width - 30;
-	m_textInput.m_height = 25;
-	m_textInput.m_xPos   = 0;
-	m_textInput.m_yPos   = m_height - 25;
+	m_textChat.m_width  = m_width - 30;
+	m_textChat.m_height = 25;
+	m_textChat.m_xPos   = 0;
+	m_textChat.m_yPos   = m_height - 25;
 
-	m_btnSend.m_xPos     = m_textInput.m_width;
+	m_btnSend.m_xPos     = m_textChat.m_width;
 
 	m_btnSend.m_yPos     = m_height - 25;
 	m_btnSend.m_width    = 30;
 	m_btnSend.m_height   = 25;
 
-	m_textInputs.push_back(&m_textInput);
+	m_textInputs.push_back(&m_textChat);
 	
 	m_buttons.push_back(&m_btnSend);
 	m_buttonTabList.push_back(&m_btnSend);
 
-	m_textInput.init(m_pFont);
+	m_textChat.init(m_pFont);
+}
+
+void ChatScreen::removed()
+{
+	m_pMinecraft->m_gui.m_bRenderMessages = true;
 }
 
 void ChatScreen::render(int mouseX, int mouseY, float f)
@@ -109,7 +118,20 @@ void ChatScreen::render(int mouseX, int mouseY, float f)
 	r.assign(m_chatLog.rbegin(), m_chatLog.rend());
 
 	int i = 2;
-	for (auto it : r) drawString(m_pFont, it.msg + "\n", m_textInput.m_xPos, (i++)*10, 0xDDDDDD);
+	for (auto it : r) drawString(m_pFont, it.msg + "\n", m_textChat.m_xPos, (i++)*10, 0xDDDDDD);
 
 	glEnable(GL_DEPTH_TEST);
+	renderBackground();
+
+	// override the default behavior of rendering chat messages
+	m_pMinecraft->m_gui.m_bRenderMessages = false;
+	m_pMinecraft->m_gui.renderMessages(true);
+
+	Screen::render(mouseX, mouseY, f);
+}
+
+void ChatScreen::keyPressed(int keyCode)
+{
+	if (keyCode == AKEYCODE_ENTER)
+		sendMessageAndExit();
 }

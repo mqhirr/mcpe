@@ -260,9 +260,6 @@ void Gui::render(float f, bool bHaveScreen, int mouseX, int mouseY)
 #endif
 
 	// render messages
-
-	int topEdge = height - 49;
-
 	if (m_bRenderMessages)
 	{
 		renderMessages(false);
