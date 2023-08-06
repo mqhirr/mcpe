@@ -94,6 +94,8 @@ void ChatScreen::init()
 void ChatScreen::render(int mouseX, int mouseY, float f)
 {
 	Screen::render(mouseX, mouseY, f);
+	renderBackground();
+	
 	glDisable(GL_DEPTH_TEST);
 
 	fill(0, 0, m_width, m_height, 0x80000000);

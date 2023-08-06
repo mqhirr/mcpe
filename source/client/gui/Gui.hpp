@@ -41,6 +41,7 @@ public:
 	bool isInside(int mx, int my);
 	void handleClick(int id, int mx, int my);
 	void handleKeyPressed(int keyCode);
+	void renderMessages(bool bShowAll);
 
 public:
 	static float InvGuiScale;
@@ -61,5 +62,6 @@ public:
 	float field_A20 = 1.0f;
 	RenderChunk m_renderChunk;
 	bool field_A3C = true;
+	bool m_bRenderMessages = true;
 };
 
