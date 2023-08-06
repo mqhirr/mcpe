@@ -20,6 +20,20 @@ void ChatScreen::buttonClicked(Button* pButton)
 	{
 		if (m_textInput.m_text.size() > 0)
 		{
+			#ifdef __EMSCRIPTEN__
+			if (m_textInput.m_text[0] == '/')
+			{
+				if (m_textInput.m_text.substr(1) == "test")
+				{
+					m_pMinecraft->m_gui.addMessage("Test command invoked!");
+				}
+			}
+
+			else
+			{
+				m_pMinecraft->m_gui.addMessage(m_pMinecraft->m_pLocalPlayer->m_name + ": " + m_textInput.m_text);
+			}
+			#else
 			if (m_pMinecraft->m_pRakNetInstance->m_bIsHost)
 			{
 				if (m_textInput.m_text[0] == '/')
@@ -42,6 +56,7 @@ void ChatScreen::buttonClicked(Button* pButton)
 			{
 				m_pMinecraft->m_pRakNetInstance->send(new MessagePacket(m_textInput.m_text));
 			}
+			#endif
 
 			m_textInput.m_text.clear();
 		}
