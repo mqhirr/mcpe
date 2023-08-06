@@ -18,11 +18,9 @@ ChatScreen::ChatScreen() : m_textChat(1, 0, 0), m_btnSend(2, 0, 0, "Send")
 {
 }
 
-void ChatScreen::buttonClicked(Button* pButton)
+void ChatScreen::sendMessage()
 {
-	if (pButton->m_buttonId == m_btnSend.m_buttonId)
-	{
-		if (m_textChat.m_text.size() > 0)
+if (m_textChat.m_text.size() > 0)
 		{
 			#ifdef __EMSCRIPTEN__
 			if (m_textChat.m_text[0] == '/')
@@ -64,6 +62,13 @@ void ChatScreen::buttonClicked(Button* pButton)
 
 			m_textChat.m_text.clear();
 		}
+}
+
+void ChatScreen::buttonClicked(Button* pButton)
+{
+	if (pButton->m_buttonId == m_btnSend.m_buttonId)
+	{
+		sendMessage();
 	}
 }
 
@@ -133,5 +138,8 @@ void ChatScreen::render(int mouseX, int mouseY, float f)
 void ChatScreen::keyPressed(int keyCode)
 {
 	if (keyCode == AKEYCODE_ENTER)
-		sendMessageAndExit();
+	{
+		sendMessage();
+		m_pMinecraft->setScreen(nullptr);
+	}
 }

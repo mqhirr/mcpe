@@ -23,6 +23,8 @@ public:
 	void render(int mouseX, int mouseY, float f) override;
 	void keyPressed(int keyCode) override;
 
+	void sendMessage();
+
 private:
 	std::vector<GuiMessage> m_chatLog;
 	TextInputBox m_textChat;
