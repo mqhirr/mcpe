@@ -1,7 +1,7 @@
 /********************************************************************
 	Minecraft: Pocket Edition - Decompilation Project
 	Copyright (C) 2023 iProgramInCpp
-	
+
 	The following code is licensed under the BSD 1 clause license.
 	SPDX-License-Identifier: BSD-1-Clause
  ********************************************************************/
@@ -40,7 +40,11 @@ void StartMenuScreen::_updateLicense()
 	{
 		m_optionsButton.m_bEnabled = true;
 		m_startButton.m_bEnabled = true;
+#ifdef __EMSCRIPTEN__
+		m_joinButton.m_bEnabled = false;
+#else
 		m_joinButton.m_bEnabled = true;
+#endif
 	}
 	else
 	{
@@ -93,7 +97,7 @@ void StartMenuScreen::init()
 	m_buyButton.m_yPos = yPos;
 
 	m_startButton.m_xPos = (m_width - m_startButton.m_width) / 2;
-	
+
 	int x1 = m_width - m_joinButton.m_width;
 
 	m_joinButton.m_xPos = x1 / 2;
